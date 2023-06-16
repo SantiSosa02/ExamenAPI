@@ -44,23 +44,44 @@ const colegioPost = async (req, res = response) => {
 };
 
 
-const colegioPut = async(req,res = response) => {
-  
-    const {direccion,latitud,longitud,descripcion} = req.body
-    let mensaje = ''
-
-    try {
-        const colegio = await Colegio.findOneAndUpdate({direccion: direccion},{latitud: latitud,longitud: longitud,descripcion:descripcion}) //Buscar por el nombre y modificar el rol y el estado
-        mensaje = 'La modificación se realizo exitosamente'
-    } catch (error) {
-        mensaje = 'Se presentaron problemas en la modificación'
+const colegioPut = async (req, res = response) => {
+    let id = null;
+    if (req.query != null && req.query.id != null) {
+    id = req.query.id;
     }
-
+    const { direccion, latitud, longitud, descripcion} = req.body;
+    let mensaje = "";
+    
+    try {
+    if (id != null) {
+    
+    const update = { direccion: direccion , latitud: latitud, longitud: longitud, descripcion: descripcion};
+    
+    const colegio = await Colegio.findByIdAndUpdate(
+    id,
+    update,
+    {new: true, runValidators: true}
+    );
+    
+    if (colegio) {
+    mensaje = "La modificación se efectuó correctamente";
+    } else {
+    mensaje = "El reporte no fue encontrado";
+    }
+    }
+    else {
+    mensaje = "Ingrese un id";
+    }
+    
+    } catch (error) {
+    console.error(error);
+    mensaje = error.message;
+    }
+    
     res.json({
-        msg: mensaje
-    })
-}
-
+    msg: mensaje,
+    });
+    };
   
 const colegioDelete = async(req,res = response) => {
   

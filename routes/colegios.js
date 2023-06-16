@@ -8,6 +8,4 @@ route.post('/', colegioPost);
 route.put('/', colegioPut);
 route.delete('/', colegioDelete);
 
-
-
 module.exports = route
